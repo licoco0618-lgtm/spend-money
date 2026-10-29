@@ -1,0 +1,1549 @@
+/* ==========================================================================
+   🌈 萌萌彩虹記帳本 - Rainbow Cute Style System
+   ========================================================================== */
+
+:root {
+  /* 彩虹糖果馬卡龍色調 */
+  --rainbow-red: #ff7675;
+  --rainbow-orange: #fab1a0;
+  --rainbow-yellow: #ffeaa7;
+  --rainbow-green: #55efc4;
+  --rainbow-blue: #74b9ff;
+  --rainbow-purple: #a29bfe;
+  --rainbow-pink: #fd79a8;
+
+  /* 分類專屬活力色彩 (1. 正餐 2. 嘴饞 3. 其他) */
+  --color-meal: #ff793f;
+  --color-meal-bg: #fff0eb;
+  --color-meal-border: #ffb899;
+  --color-meal-gradient: linear-gradient(135deg, #ff793f 0%, #ffb142 100%);
+
+  --color-snack: #e056fd;
+  --color-snack-bg: #fae8ff;
+  --color-snack-border: #f3a8ff;
+  --color-snack-gradient: linear-gradient(135deg, #ff4d94 0%, #be2edd 100%);
+
+  --color-other: #22a6b3;
+  --color-other-bg: #e6f9fa;
+  --color-other-border: #8de4ea;
+  --color-other-gradient: linear-gradient(135deg, #00cec9 0%, #0984e3 100%);
+
+  /* UI 系統顏色 */
+  --bg-gradient: linear-gradient(145deg, #ffdde1 0%, #ee9ca7 18%, #fbc2eb 38%, #a6c1ee 70%, #c2e9fb 100%);
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-bg-subtle: rgba(255, 255, 255, 0.7);
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --text-muted: #b2bec3;
+  --border-glass: rgba(255, 255, 255, 0.85);
+  --shadow-cute: 0 16px 36px -8px rgba(162, 155, 254, 0.35), 0 6px 16px -4px rgba(253, 121, 168, 0.2);
+  --shadow-card: 0 12px 30px rgba(108, 92, 231, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 18px 40px rgba(108, 92, 231, 0.22), 0 4px 12px rgba(253, 121, 168, 0.18);
+  
+  --radius-full: 9999px;
+  --radius-lg: 26px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+}
+
+/* 全域重置與字體設定 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Zen Maru Gothic', 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+  padding: 20px 14px 60px 14px;
+}
+
+/* 背景漂浮裝飾物 (星星、雲朵、彩虹) */
+.cloud-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.floating-item {
+  position: absolute;
+  user-select: none;
+  opacity: 0.65;
+  filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.6));
+}
+
+.star-1 { top: 6%; left: 5%; font-size: 26px; animation: floatSlow 5s ease-in-out infinite; }
+.star-2 { top: 18%; right: 6%; font-size: 28px; animation: floatSlow 6s ease-in-out infinite 1s; }
+.star-3 { top: 55%; left: 3%; font-size: 22px; animation: floatSlow 7s ease-in-out infinite 2s; }
+.star-4 { top: 42%; right: 4%; font-size: 24px; animation: floatSlow 5.5s ease-in-out infinite 1.5s; }
+.star-5 { bottom: 12%; left: 8%; font-size: 20px; animation: twinkle 3s ease-in-out infinite; }
+.cloud-1 { top: 10%; left: -20px; font-size: 42px; animation: driftRight 45s linear infinite; opacity: 0.45; }
+.cloud-2 { top: 48%; right: -30px; font-size: 48px; animation: driftLeft 55s linear infinite; opacity: 0.4; }
+.rainbow-arc { bottom: 5%; right: 3%; font-size: 48px; animation: floatSlow 8s ease-in-out infinite 0.5s; opacity: 0.7; }
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(6deg); }
+}
+
+@keyframes driftRight {
+  from { transform: translateX(-10vw); }
+  to { transform: translateX(110vw); }
+}
+
+@keyframes driftLeft {
+  from { transform: translateX(10vw); }
+  to { transform: translateX(-110vw); }
+}
+
+@keyframes twinkle {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.3) rotate(15deg); opacity: 0.9; }
+}
+
+/* 主容器 */
+.app-container {
+  max-width: 660px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Header 樣式
+   ========================================================================== */
+.app-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header-badges-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(253, 121, 168, 0.2);
+  font-size: 12px;
+  font-weight: 700;
+  color: #d63031;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  background: #ff7675;
+  border-radius: 50%;
+  animation: pulseDot 1.6s infinite ease-in-out;
+}
+
+/* 本機儲存安心小標籤 */
+.storage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(236, 253, 245, 0.95);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 800;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+.storage-dot {
+  width: 7px;
+  height: 7px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #10b981;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logo-emoji {
+  font-size: 38px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.bounce-animation {
+  animation: cuteBounce 2.5s ease infinite;
+}
+
+@keyframes cuteBounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+.app-title {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff7f50 25%, #ffa502 50%, #2ed573 75%, #1e90ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+}
+
+.app-subtitle {
+  color: #636e72;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 頂部工具列 */
+.header-tools {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pill-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  user-select: none;
+}
+
+.pill-tool-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 6px 14px rgba(108, 92, 231, 0.18);
+}
+
+.pill-tool-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.pill-tool-btn.danger:hover {
+  color: #e84118;
+  border-color: #fbc2eb;
+}
+
+/* ==========================================================================
+   總金額與統計 Dashboard (支援本月 / 全部範圍切換)
+   ========================================================================== */
+.dashboard-section {
+  margin-bottom: 20px;
+}
+
+.rainbow-border-glow {
+  position: relative;
+  background: var(--card-bg);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px;
+  box-shadow: var(--shadow-cute);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+}
+
+.rainbow-border-glow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ff7675, #fab1a0, #ffeaa7, #55efc4, #74b9ff, #a29bfe, #fd79a8);
+}
+
+/* 統計範圍切換鈕 (本月 / 全部) */
+.dashboard-scope-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.scope-toggle-group {
+  display: inline-flex;
+  background: #f1f2f6;
+  padding: 3px;
+  border-radius: var(--radius-full);
+}
+
+.scope-toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scope-toggle-btn.active {
+  background: #ffffff;
+  color: #ff4757;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.total-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.total-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rainbow-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #ff7675, #fd79a8);
+  color: #ffffff;
+}
+
+.total-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.coin-mascot {
+  font-size: 34px;
+  filter: drop-shadow(0 3px 6px rgba(255, 215, 0, 0.4));
+}
+
+.floating-slow {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.total-amount-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 6px 0 16px 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 245, 247, 0.85));
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 2px dashed rgba(255, 121, 168, 0.3);
+}
+
+.currency-symbol {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fd79a8;
+  margin-right: 4px;
+}
+
+.total-number {
+  font-size: 44px;
+  font-weight: 900;
+  font-family: 'Fredoka', 'Zen Maru Gothic', sans-serif;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff6b81 50%, #9b59b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.currency-unit {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+
+/* 彩虹進度條 */
+.rainbow-progress-wrap {
+  margin-bottom: 16px;
+}
+
+.rainbow-progress-bar {
+  display: flex;
+  height: 10px;
+  width: 100%;
+  background: #f1f2f6;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.progress-segment {
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-segment.meal {
+  background: var(--color-meal-gradient);
+}
+
+.progress-segment.snack {
+  background: var(--color-snack-gradient);
+}
+
+.progress-segment.other {
+  background: var(--color-other-gradient);
+}
+
+/* 3 分類統計小卡 */
+.category-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.summary-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+.meal-chip {
+  background: var(--color-meal-bg);
+  border-color: var(--color-meal-border);
+}
+
+.snack-chip {
+  background: var(--color-snack-bg);
+  border-color: var(--color-snack-border);
+}
+
+.other-chip {
+  background: var(--color-other-bg);
+  border-color: var(--color-other-border);
+}
+
+.chip-icon {
+  font-size: 24px;
+  margin-bottom: 2px;
+}
+
+.chip-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.chip-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.chip-val {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--text-primary);
+  font-family: 'Fredoka', 'Zen Maru Gothic', sans-serif;
+}
+
+.chip-pct {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.meal-chip .chip-pct { color: var(--color-meal); }
+.snack-chip .chip-pct { color: var(--color-snack); }
+.other-chip .chip-pct { color: var(--color-other); }
+
+/* ==========================================================================
+   可愛卡片通用樣式
+   ========================================================================== */
+.cute-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+}
+
+.card-header-cute {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed rgba(220, 221, 225, 0.7);
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.heading-deco {
+  font-size: 20px;
+}
+
+.card-tag {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #ff4757;
+  background: #ffeaa7;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   表單區塊 (Form Section)
+   ========================================================================== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.label-badge {
+  font-size: 10px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+  color: white;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+
+.label-badge.optional {
+  background: #dfe6e9;
+  color: #636e72;
+}
+
+.required-star {
+  color: #ff4757;
+  font-weight: 900;
+}
+
+/* 類別選擇單選卡片 (1. 正餐 2. 嘴饞 3. 其他) */
+.category-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.category-radio-card {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.category-radio-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px 6px;
+  border-radius: var(--radius-md);
+  border: 2px solid #eceff1;
+  background: #ffffff;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.02);
+  position: relative;
+}
+
+.radio-emoji {
+  font-size: 30px;
+  margin-bottom: 4px;
+  transition: transform 0.25s ease;
+}
+
+.radio-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.radio-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.radio-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.radio-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.check-bubble {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #dfe6e9;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* 單選選中狀態 */
+.category-radio-card input[type="radio"]:checked + .radio-card-content {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.category-radio-card input[type="radio"]:checked + .radio-card-content .radio-emoji {
+  transform: scale(1.12) rotate(4deg);
+}
+
+.category-radio-card input[type="radio"]:checked + .radio-card-content .check-bubble {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 正餐 Active */
+.meal-option input[type="radio"]:checked + .radio-card-content {
+  border-color: var(--color-meal);
+  background: var(--color-meal-bg);
+}
+.meal-option input[type="radio"]:checked + .radio-card-content .check-bubble {
+  background: var(--color-meal);
+}
+.meal-option input[type="radio"]:checked + .radio-card-content .radio-title {
+  color: #d35400;
+}
+
+/* 嘴饞 Active */
+.snack-option input[type="radio"]:checked + .radio-card-content {
+  border-color: var(--color-snack);
+  background: var(--color-snack-bg);
+}
+.snack-option input[type="radio"]:checked + .radio-card-content .check-bubble {
+  background: var(--color-snack);
+}
+.snack-option input[type="radio"]:checked + .radio-card-content .radio-title {
+  color: #8e44ad;
+}
+
+/* 其他 Active */
+.other-option input[type="radio"]:checked + .radio-card-content {
+  border-color: var(--color-other);
+  background: var(--color-other-bg);
+}
+.other-option input[type="radio"]:checked + .radio-card-content .check-bubble {
+  background: var(--color-other);
+}
+.other-option input[type="radio"]:checked + .radio-card-content .radio-title {
+  color: #0984e3;
+}
+
+/* ==========================================================================
+   金額輸入框
+   ========================================================================== */
+.amount-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2.5px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 6px 14px;
+  transition: all 0.25s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.amount-input-wrapper:focus-within {
+  border-color: #fd79a8;
+  box-shadow: 0 0 0 3px rgba(253, 121, 168, 0.2);
+}
+
+.amount-symbol-prefix {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fd79a8;
+  margin-right: 6px;
+  user-select: none;
+}
+
+.cute-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 16px; /* 防止 iOS 點擊輸入框時畫面放大跳動 */
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.cute-input::placeholder {
+  color: #b2bec3;
+  font-weight: 500;
+}
+
+.amount-field {
+  font-size: 24px;
+  font-weight: 900;
+  font-family: 'Fredoka', 'Zen Maru Gothic', sans-serif;
+  color: #2d3436;
+}
+
+.clear-input-btn {
+  background: #dfe6e9;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #636e72;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-input-btn:hover {
+  background: #ff7675;
+  color: white;
+}
+
+/* 快捷加額按鈕 */
+.quick-amounts-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.quick-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.quick-chip {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #e0e0e0;
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a4a4a;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.quick-chip:hover {
+  background: #ffeaa7;
+  border-color: #fdcb6e;
+  transform: translateY(-2px) scale(1.05);
+  color: #d35400;
+}
+
+.quick-chip:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+/* 雙欄輸入 (備註與日期) */
+.form-row-two {
+  display: flex;
+  gap: 10px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.date-group {
+  width: 160px;
+}
+
+.input-icon-wrap {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  transition: all 0.25s ease;
+}
+
+.input-icon-wrap:focus-within {
+  border-color: #a29bfe;
+  box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.2);
+}
+
+.input-icon {
+  font-size: 15px;
+  margin-right: 6px;
+}
+
+/* 提交按鈕 */
+.rainbow-submit-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #ff7675 0%, #fab1a0 20%, #ffeaa7 40%, #55efc4 60%, #74b9ff 80%, #a29bfe 100%);
+  background-size: 200% auto;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 22px -4px rgba(253, 121, 168, 0.4), 0 3px 8px rgba(108, 92, 231, 0.25);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  margin-top: 6px;
+}
+
+.rainbow-submit-btn:hover {
+  background-position: right center;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 28px -4px rgba(253, 121, 168, 0.5), 0 5px 12px rgba(108, 92, 231, 0.3);
+}
+
+.rainbow-submit-btn:active {
+  transform: translateY(2px) scale(0.98);
+}
+
+.btn-sparkle {
+  font-size: 18px;
+  animation: twinkle 2s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   消費明細記錄 (Records Section - 含「一個月觀看一次」導航)
+   ========================================================================== */
+.records-section {
+  margin-bottom: 24px;
+}
+
+.records-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 2px dashed rgba(220, 221, 225, 0.7);
+}
+
+.records-title-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.count-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: #f1f2f6;
+  color: var(--text-secondary);
+}
+
+/* 檢視模式選擇 (按月檢視 vs 全部) */
+.view-mode-selector {
+  display: flex;
+  gap: 6px;
+  background: #f1f2f6;
+  padding: 4px;
+  border-radius: var(--radius-full);
+}
+
+.mode-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.mode-tab-btn.active {
+  background: #ffffff;
+  color: #d63031;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 月份切換控制器 (按月檢視專屬) */
+.month-navigator-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: #fff5f7;
+  border: 1.5px solid #ffccd5;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.month-nav-btn {
+  background: #ffffff;
+  border: 1.5px solid #ffccd5;
+  color: #ff4757;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.month-nav-btn:hover {
+  background: #ffeaa7;
+  border-color: #fdcb6e;
+  transform: scale(1.05);
+}
+
+.month-picker-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.month-display-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid #ff7675;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(253, 121, 168, 0.2);
+}
+
+.current-month-text {
+  font-size: 14px;
+  font-weight: 900;
+  color: #2d3436;
+}
+
+.down-arrow {
+  font-size: 10px;
+  color: #ff7675;
+}
+
+.hidden-month-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.month-quick-today-btn {
+  background: #ffeaa7;
+  border: 1px solid #fdcb6e;
+  color: #d35400;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+/* 本月小計 Bar */
+.month-subtotal-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 234, 167, 0.4);
+  border: 1px solid #ffeaa7;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+}
+
+.subtotal-lead {
+  color: #636e72;
+  font-weight: 700;
+}
+
+.subtotal-val {
+  color: #d63031;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: 'Fredoka', 'Zen Maru Gothic', sans-serif;
+}
+
+/* 篩選 Tab */
+.filter-tabs {
+  display: flex;
+  gap: 6px;
+  background: #f1f2f6;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  overflow-x: auto;
+}
+
+.filter-tab {
+  flex: 1;
+  min-width: fit-content;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.filter-tab.active {
+  background: #ffffff;
+  color: #ff4757;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 紀錄清單 */
+.expense-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #f1f2f6;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideInCute 0.3s ease forwards;
+  position: relative;
+}
+
+@keyframes slideInCute {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.expense-item:hover {
+  transform: translateX(3px);
+  border-color: #ffd2d7;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.04);
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* 讓 flex 子元素支援 ellipsis 截斷 */
+}
+
+.item-icon-bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.expense-item.category-meal .item-icon-bubble {
+  background: var(--color-meal-bg);
+  border: 2px solid var(--color-meal-border);
+}
+
+.expense-item.category-snack .item-icon-bubble {
+  background: var(--color-snack-bg);
+  border: 2px solid var(--color-snack-border);
+}
+
+.expense-item.category-other .item-icon-bubble {
+  background: var(--color-other-bg);
+  border: 2px solid var(--color-other-border);
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.item-category-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.category-meal .item-category-tag {
+  background: var(--color-meal-bg);
+  color: var(--color-meal);
+}
+
+.category-snack .item-category-tag {
+  background: var(--color-snack-bg);
+  color: var(--color-snack);
+}
+
+.category-other .item-category-tag {
+  background: var(--color-other-bg);
+  color: var(--color-other);
+}
+
+.item-note {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.item-amount {
+  font-size: 17px;
+  font-weight: 900;
+  font-family: 'Fredoka', 'Zen Maru Gothic', sans-serif;
+  color: #2d3436;
+}
+
+.item-delete-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #b2bec3;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.item-delete-btn:hover {
+  background: #ffeaa7;
+  color: #d63031;
+  transform: scale(1.15);
+}
+
+/* 空狀態 (Empty State) */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 14px;
+}
+
+.empty-mascot-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.empty-rainbow {
+  font-size: 48px;
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.empty-cloud {
+  font-size: 32px;
+  position: absolute;
+  bottom: -4px;
+  right: -8px;
+  animation: floatSlow 4s ease-in-out infinite 1s;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.empty-desc {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  max-width: 300px;
+}
+
+/* ==========================================================================
+   底部與裝飾 (Footer)
+   ========================================================================== */
+.app-footer {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.footer-rainbow-bar {
+  height: 4px;
+  width: 120px;
+  margin: 0 auto 14px auto;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #ff7675, #ffeaa7, #55efc4, #74b9ff, #a29bfe);
+}
+
+.encouragement-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4a4a4a;
+  margin-bottom: 6px;
+}
+
+.copyright-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7f8c8d;
+}
+
+/* ==========================================================================
+   噴彩帶 Canvas
+   ========================================================================== */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* 可愛浮動提示訊息 (Cute Toast) */
+.cute-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: rgba(45, 52, 54, 0.92);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cute-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   📱 手機版專屬極致優化 (RWD Mobile Perfection)
+   針對直立手機螢幕 (iPhone, Android) 進行版面完整適應
+   ========================================================================== */
+@media (max-width: 580px) {
+  body {
+    padding: 12px 10px 40px 10px;
+  }
+
+  .app-container {
+    max-width: 100%;
+  }
+
+  .app-title {
+    font-size: 24px;
+  }
+
+  .logo-emoji {
+    font-size: 32px;
+  }
+
+  .total-card, .cute-card {
+    padding: 16px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .total-number {
+    font-size: 36px;
+  }
+
+  .currency-symbol {
+    font-size: 20px;
+  }
+
+  /* 3 個分類選項在手機上呈現整齊且不佔過高篇幅的 3 欄式設計 */
+  .category-options-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .radio-card-content {
+    padding: 10px 4px;
+  }
+
+  .radio-emoji {
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
+
+  .radio-num {
+    font-size: 10px;
+  }
+
+  .radio-title {
+    font-size: 13px;
+  }
+
+  .radio-desc {
+    display: none; /* 手機上隱藏多餘小文字，保持畫面清爽不擁擠 */
+  }
+
+  .check-bubble {
+    width: 15px;
+    height: 15px;
+    font-size: 9px;
+    top: 4px;
+    right: 4px;
+  }
+
+  /* 快捷加額按鈕 */
+  .quick-amounts-bar {
+    gap: 4px;
+  }
+
+  .quick-chip {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  /* 備註與日期在手機上分兩行或緊湊排列 */
+  .form-row-two {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .date-group {
+    width: 100%;
+  }
+
+  /* 分類統計小卡在手機上緊湊完美呈現 */
+  .category-summary-grid {
+    gap: 6px;
+  }
+
+  .summary-chip {
+    padding: 8px 4px;
+  }
+
+  .chip-icon {
+    font-size: 20px;
+  }
+
+  .chip-name {
+    font-size: 11px;
+  }
+
+  .chip-val {
+    font-size: 12.5px;
+  }
+
+  .chip-pct {
+    font-size: 9px;
+    padding: 1px 5px;
+  }
+
+  /* 月份控制器手機自適應 */
+  .month-navigator-card {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .month-display-pill {
+    padding: 5px 10px;
+  }
+
+  .current-month-text {
+    font-size: 13px;
+  }
+
+  .month-nav-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .month-quick-today-btn {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  /* 歷史清單項目手機寬度緊湊優化 */
+  .expense-item {
+    padding: 10px 10px;
+  }
+
+  .item-icon-bubble {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .item-category-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+
+  .item-note {
+    font-size: 12.5px;
+    max-width: 110px;
+  }
+
+  .item-amount {
+    font-size: 15px;
+  }
+
+  .item-delete-btn {
+    font-size: 14px;
+    padding: 4px;
+  }
+}

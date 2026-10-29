@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fbc2eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>🌈 萌萌彩虹記帳本 | Rainbow Cute Money Tracker</title>
+  <meta name="description" content="超可愛的彩虹風記帳小網站，支援手機專屬完整版面、按月瀏覽與資料本機永久儲存，輕鬆記錄正餐、嘴饞與其他消費！">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 背景飄浮彩虹雲朵與星星裝飾 -->
+  <div class="cloud-decorations" aria-hidden="true">
+    <div class="floating-item star star-1">⭐</div>
+    <div class="floating-item star star-2">✨</div>
+    <div class="floating-item star star-3">🌟</div>
+    <div class="floating-item star star-4">💖</div>
+    <div class="floating-item star star-5">✨</div>
+    <div class="floating-item cloud cloud-1">☁️</div>
+    <div class="floating-item cloud cloud-2">☁️</div>
+    <div class="floating-item rainbow-arc">🌈</div>
+  </div>
+
+  <div class="app-container">
+    <!-- 頂部 Header -->
+    <header class="app-header">
+      <div class="header-badges-row">
+        <div class="header-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">今天也要開開心心記帳！</span>
+          <span class="badge-sparkle">✨</span>
+        </div>
+        <!-- 儲存狀態安心小徽章 -->
+        <div class="storage-badge" id="storageStatusBadge" title="消費紀錄會安全保存在這台設備的瀏覽器中">
+          <span class="storage-dot"></span>
+          <span class="storage-text">已自動儲存於本機</span>
+        </div>
+      </div>
+
+      <div class="title-wrapper">
+        <div class="logo-emoji bounce-animation">🌈</div>
+        <h1 class="app-title">彩虹萌萌記帳本</h1>
+      </div>
+      <p class="app-subtitle">輕鬆紀錄每一筆小確幸 ‧ 掌握生活大開支</p>
+      
+      <!-- 頂部功能工具列 (音效、備份、匯入、重設) -->
+      <div class="header-tools">
+        <button id="soundToggleBtn" class="pill-tool-btn" title="切換可愛音效" aria-label="切換可愛音效">
+          <span class="tool-icon" id="soundIcon">🔔</span>
+          <span class="tool-text" id="soundText">音效開啟</span>
+        </button>
+
+        <button id="exportDataBtn" class="pill-tool-btn" title="下載備份檔，資料永不遺失" aria-label="備份資料">
+          <span class="tool-icon">💾</span>
+          <span class="tool-text">備份紀錄</span>
+        </button>
+
+        <label for="importFileInput" class="pill-tool-btn" title="匯入之前備份的紀錄" aria-label="匯入紀錄">
+          <span class="tool-icon">📥</span>
+          <span class="tool-text">匯入還原</span>
+          <input type="file" id="importFileInput" accept=".json" style="display:none;">
+        </label>
+
+        <button id="clearAllBtn" class="pill-tool-btn danger" title="清空所有記錄" aria-label="清空所有記錄">
+          <span class="tool-icon">🗑️</span>
+          <span class="tool-text">重設帳本</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 總金額 & 統計儀表板卡片 (支援本月 / 全部切換) -->
+    <section class="dashboard-section" aria-label="消費統計">
+      <div class="total-card rainbow-border-glow">
+        <!-- 統計範圍切換按鈕 -->
+        <div class="dashboard-scope-bar">
+          <div class="scope-toggle-group">
+            <button type="button" class="scope-toggle-btn active" id="scopeMonthBtn" data-scope="month">
+              🗓️ 本月統計 (<span id="dashMonthLabel">10月</span>)
+            </button>
+            <button type="button" class="scope-toggle-btn" id="scopeAllBtn" data-scope="all">
+              🌟 歷史總計
+            </button>
+          </div>
+          <div class="coin-mascot floating-slow">💰</div>
+        </div>
+        
+        <div class="total-header">
+          <div class="total-label-group">
+            <span class="rainbow-pill" id="totalScopePill">MONTHLY EXPENSES</span>
+            <span class="total-title" id="totalTitleText">本月累積支出金額</span>
+          </div>
+        </div>
+        
+        <div class="total-amount-display">
+          <span class="currency-symbol">$</span>
+          <span id="totalAmount" class="total-number">0</span>
+          <span class="currency-unit">元</span>
+        </div>
+
+        <!-- 彩虹比例分配條 -->
+        <div class="rainbow-progress-wrap">
+          <div class="rainbow-progress-bar">
+            <div id="barMeal" class="progress-segment meal" style="width: 0%;" title="正餐 0%"></div>
+            <div id="barSnack" class="progress-segment snack" style="width: 0%;" title="嘴饞 0%"></div>
+            <div id="barOther" class="progress-segment other" style="width: 0%;" title="其他 0%"></div>
+          </div>
+        </div>
+
+        <!-- 3個分類統計小卡 (1. 正餐 2. 嘴饞 3. 其他) -->
+        <div class="category-summary-grid">
+          <!-- 正餐 -->
+          <div class="summary-chip meal-chip">
+            <div class="chip-icon">🍱</div>
+            <div class="chip-info">
+              <span class="chip-name">1. 正餐</span>
+              <span class="chip-val"><span id="sumMeal">0</span> 元</span>
+            </div>
+            <span id="pctMeal" class="chip-pct">0%</span>
+          </div>
+
+          <!-- 嘴饞 -->
+          <div class="summary-chip snack-chip">
+            <div class="chip-icon">🧋</div>
+            <div class="chip-info">
+              <span class="chip-name">2. 嘴饞</span>
+              <span class="chip-val"><span id="sumSnack">0</span> 元</span>
+            </div>
+            <span id="pctSnack" class="chip-pct">0%</span>
+          </div>
+
+          <!-- 其他 -->
+          <div class="summary-chip other-chip">
+            <div class="chip-icon">🎈</div>
+            <div class="chip-info">
+              <span class="chip-name">3. 其他</span>
+              <span class="chip-val"><span id="sumOther">0</span> 元</span>
+            </div>
+            <span id="pctOther" class="chip-pct">0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 記帳輸入表單卡片 -->
+    <main class="form-section">
+      <div class="cute-card form-card">
+        <div class="card-header-cute">
+          <h2 class="card-heading">
+            <span class="heading-deco">✏️</span>
+            <span>記上一筆新開銷</span>
+          </h2>
+          <span class="card-tag">NEW ENTRY</span>
+        </div>
+
+        <form id="expenseForm" autocomplete="off">
+          <!-- 項目選擇 (1. 正餐 2. 嘴饞 3. 其他) -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-badge">Step 1</span>
+              <span class="label-text">選擇消費項目類別</span>
+              <span class="required-star">*</span>
+            </label>
+            
+            <div class="category-options-grid" id="categoryGroup" role="radiogroup" aria-label="消費項目類別">
+              <!-- 正餐選項 -->
+              <label class="category-radio-card meal-option">
+                <input type="radio" name="expenseCategory" value="meal" checked>
+                <div class="radio-card-content">
+                  <div class="radio-emoji">🍱</div>
+                  <div class="radio-details">
+                    <span class="radio-num">1. 正餐</span>
+                    <strong class="radio-title">早午晚餐</strong>
+                    <span class="radio-desc">便當 / 麵食 / 水餃</span>
+                  </div>
+                  <div class="check-bubble">✓</div>
+                </div>
+              </label>
+
+              <!-- 嘴饞選項 -->
+              <label class="category-radio-card snack-option">
+                <input type="radio" name="expenseCategory" value="snack">
+                <div class="radio-card-content">
+                  <div class="radio-emoji">🧋</div>
+                  <div class="radio-details">
+                    <span class="radio-num">2. 嘴饞</span>
+                    <strong class="radio-title">點心飲料</strong>
+                    <span class="radio-desc">手搖 / 甜點 / 炸物</span>
+                  </div>
+                  <div class="check-bubble">✓</div>
+                </div>
+              </label>
+
+              <!-- 其他選項 -->
+              <label class="category-radio-card other-option">
+                <input type="radio" name="expenseCategory" value="other">
+                <div class="radio-card-content">
+                  <div class="radio-emoji">🎈</div>
+                  <div class="radio-details">
+                    <span class="radio-num">3. 其他</span>
+                    <strong class="radio-title">日常娛樂</strong>
+                    <span class="radio-desc">交通 / 文具 / 生活</span>
+                  </div>
+                  <div class="check-bubble">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 金額輸入 -->
+          <div class="form-group">
+            <label class="form-label" for="amountInput">
+              <span class="label-badge">Step 2</span>
+              <span class="label-text">消費金額</span>
+              <span class="required-star">*</span>
+            </label>
+            
+            <div class="amount-input-wrapper">
+              <span class="amount-symbol-prefix">NT$</span>
+              <input 
+                type="number" 
+                id="amountInput" 
+                name="amount" 
+                class="cute-input amount-field" 
+                placeholder="0" 
+                min="1" 
+                max="9999999" 
+                step="1"
+                inputmode="numeric"
+                required
+              >
+              <button type="button" id="clearAmountBtn" class="clear-input-btn" title="清空金額" style="display:none;">✕</button>
+            </div>
+
+            <!-- 快捷金額小按鈕 -->
+            <div class="quick-amounts-bar">
+              <span class="quick-label">⚡ 快速加額：</span>
+              <button type="button" class="quick-chip" data-add="35">+35 (飲料)</button>
+              <button type="button" class="quick-chip" data-add="65">+65 (早餐)</button>
+              <button type="button" class="quick-chip" data-add="100">+100</button>
+              <button type="button" class="quick-chip" data-add="150">+150 (便當)</button>
+              <button type="button" class="quick-chip" data-add="500">+500</button>
+            </div>
+          </div>
+
+          <!-- 備註說明與日期 (選填) -->
+          <div class="form-row-two">
+            <div class="form-group flex-1">
+              <label class="form-label" for="noteInput">
+                <span class="label-badge optional">備註</span>
+                <span class="label-text">備註品項 (選填)</span>
+              </label>
+              <div class="input-icon-wrap">
+                <span class="input-icon">💭</span>
+                <input 
+                  type="text" 
+                  id="noteInput" 
+                  name="note" 
+                  class="cute-input" 
+                  placeholder="例如：排骨飯加蛋、微冰無糖奶茶..." 
+                  maxlength="30"
+                >
+              </div>
+            </div>
+
+            <div class="form-group date-group">
+              <label class="form-label" for="dateInput">
+                <span class="label-badge optional">時間</span>
+                <span class="label-text">消費日期</span>
+              </label>
+              <div class="input-icon-wrap">
+                <span class="input-icon">📅</span>
+                <input 
+                  type="date" 
+                  id="dateInput" 
+                  name="date" 
+                  class="cute-input"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 提交按鈕 -->
+          <button type="submit" id="addExpenseBtn" class="rainbow-submit-btn">
+            <span class="btn-sparkle">✨</span>
+            <span class="btn-text">存入彩虹帳本！</span>
+            <span class="btn-sparkle">✨</span>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- 消費明細列表卡片 (包含「一個月觀看一次」的切換功能) -->
+    <section class="records-section" aria-label="消費明細紀錄">
+      <div class="cute-card records-card">
+        <div class="records-header">
+          <div class="records-title-group">
+            <h2 class="card-heading">
+              <span class="heading-deco">📖</span>
+              <span>消費歷史明細</span>
+            </h2>
+            <span id="recordCountBadge" class="count-badge">0 筆記錄</span>
+          </div>
+
+          <!-- 檢視模式選擇：按月觀看 vs 全部歷史 -->
+          <div class="view-mode-selector">
+            <button type="button" class="mode-tab-btn active" id="modeMonthTab" data-mode="month">
+              🗓️ 一個月觀看一次 (按月檢視)
+            </button>
+            <button type="button" class="mode-tab-btn" id="modeAllTab" data-mode="all">
+              🌟 全部歷史紀錄
+            </button>
+          </div>
+
+          <!-- 月份切換控制器 (僅在「按月檢視」時顯示) -->
+          <div class="month-navigator-card" id="monthNavigatorCard">
+            <button type="button" id="prevMonthBtn" class="month-nav-btn" title="查看上一個月" aria-label="上一個月">
+              ◀ 上個月
+            </button>
+            
+            <div class="month-picker-wrap">
+              <label for="monthPickerInput" class="month-display-pill" id="monthDisplayPill" title="點擊選擇特定月份">
+                <span class="cal-icon">📅</span>
+                <strong id="currentMonthLabel" class="current-month-text">2026 年 10 月</strong>
+                <span class="down-arrow">▾</span>
+              </label>
+              <!-- 原生月份選擇器 (手機上會跳出滑輪選單，體驗超流暢) -->
+              <input type="month" id="monthPickerInput" class="hidden-month-input">
+            </div>
+
+            <button type="button" id="nextMonthBtn" class="month-nav-btn" title="查看下一個月" aria-label="下一個月">
+              下個月 ▶
+            </button>
+            <button type="button" id="thisMonthQuickBtn" class="month-quick-today-btn" title="快速回到這個月">
+              回到本月
+            </button>
+          </div>
+
+          <!-- 本月小結摘要列 (月檢視專屬) -->
+          <div class="month-subtotal-banner" id="monthSubtotalBanner">
+            <span class="subtotal-lead">🗓️ 本月開銷小計：</span>
+            <strong class="subtotal-val" id="monthSubtotalVal">$0 元</strong>
+          </div>
+
+          <!-- 分類篩選 Tab (全部 / 正餐 / 嘴饞 / 其他) -->
+          <div class="filter-tabs" role="tablist" aria-label="篩選紀錄">
+            <button class="filter-tab active" data-filter="all">全部</button>
+            <button class="filter-tab" data-filter="meal">🍱 1. 正餐</button>
+            <button class="filter-tab" data-filter="snack">🧋 2. 嘴饞</button>
+            <button class="filter-tab" data-filter="other">🎈 3. 其他</button>
+          </div>
+        </div>
+
+        <!-- 列表清單 -->
+        <div class="records-list-wrapper">
+          <ul id="expenseList" class="expense-list">
+            <!-- 動態由 JavaScript 生成紀錄 -->
+          </ul>
+
+          <!-- 空狀態展示 (無紀錄時) -->
+          <div id="emptyState" class="empty-state">
+            <div class="empty-mascot-wrap">
+              <div class="empty-rainbow">🌈</div>
+              <div class="empty-cloud">☁️</div>
+            </div>
+            <p class="empty-title" id="emptyTitle">目前還沒有任何消費紀錄喔～</p>
+            <p class="empty-desc" id="emptyDesc">今天吃了什麼美食或買了什麼呢？趕快在上方記下一筆吧！</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 底部彩虹可愛語錄與版權 -->
+    <footer class="app-footer">
+      <div class="footer-rainbow-bar"></div>
+      <p class="encouragement-text" id="quoteText">✨ 「省錢是為了走更長遠的路，偶爾喝杯珍奶犒賞自己也很棒！」 💖</p>
+      <p class="copyright-text">Made with 🌈 & 💖 ‧ 萌萌彩虹記帳本 ‧ 資料永久留存於此手機/電腦</p>
+    </footer>
+  </div>
+
+  <!-- 彩虹愛心與紙屑飄落 Canvas (新增紀錄時噴灑) -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <!-- 可愛浮動提示訊息 (Toast) -->
+  <div id="cuteToast" class="cute-toast" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
